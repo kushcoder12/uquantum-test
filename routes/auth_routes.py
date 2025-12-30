@@ -1,11 +1,23 @@
 from fastapi import APIRouter, HTTPException, Response, Request
 from pydantic import BaseModel
 from services.auth_service import auth_service
+from settings import settings
+import logging
 
 router = APIRouter()
 
 SESSION_COOKIE = "session_token"
-COOKIE_SETTINGS = {"httponly": False, "samesite": "lax"}
+_logger = logging.getLogger("auth")
+
+def _cookie_settings():
+    samesite = (getattr(settings, "COOKIE_SAMESITE", "none") or "none").lower()
+    secure = bool(getattr(settings, "COOKIE_SECURE", True))
+
+    # Browsers require Secure=True when SameSite=None for cross-site cookies.
+    if samesite == "none" and not secure:
+        _logger.warning("COOKIE_SAMESITE='none' but COOKIE_SECURE=False — this combination will be rejected by browsers. Consider enabling COOKIE_SECURE (HTTPS) for production.")
+
+    return {"httponly": True, "samesite": samesite, "secure": secure}
 
 
 class LoginPayload(BaseModel):
@@ -22,7 +34,7 @@ def login(user: LoginPayload, response: Response):
     result = auth_service.login_user(user.username, user.password)
     if not result:
         raise HTTPException(status_code=401, detail="Invalid credentials")
-    response.set_cookie(SESSION_COOKIE, result["token"], **COOKIE_SETTINGS)
+    response.set_cookie(SESSION_COOKIE, result["token"], **_cookie_settings())
     return {"msg": "Logged in", "user": result["user"]}
 
 
@@ -31,7 +43,7 @@ def login_with_google(google_login: GoogleLoginPayload, response: Response):
     result = auth_service.login_with_google(google_login.credential)
     if not result:
         raise HTTPException(status_code=401, detail="Invalid Google credential")
-    response.set_cookie(SESSION_COOKIE, result["token"], **COOKIE_SETTINGS)
+    response.set_cookie(SESSION_COOKIE, result["token"], **_cookie_settings())
     return {"msg": "Logged in with Google", "user": result["user"]}
 
 
