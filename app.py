@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from routes import auth_routes, workspace_routes, llm_routes, transpile_routes, execution_routes, hardware_routes
-from config import settings
+from settings import settings
 import logging
 
 app = FastAPI(title="Uniq Quantum Hub Backend MVP")

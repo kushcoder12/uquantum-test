@@ -18,7 +18,7 @@ uvicorn app:app --reload --host 0.0.0.0 --port 8000
 
 ## Structure
 - `app.py` – FastAPI main app
-- `config.py` – environment configuration
+- `settings.py` – environment configuration (reads `.env` via pydantic)
 - `services/` – business logic modules
 - `routes/` – API endpoints
 - `transpiler/` – quantum transpilation logic

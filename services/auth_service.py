@@ -2,7 +2,7 @@ import secrets
 import time
 import requests
 from typing import Dict, Optional
-from config import settings
+from settings import settings
 
 
 class AuthService:
