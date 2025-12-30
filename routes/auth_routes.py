@@ -5,7 +5,7 @@ from services.auth_service import auth_service
 router = APIRouter()
 
 SESSION_COOKIE = "session_token"
-COOKIE_SETTINGS = {"httponly": True, "samesite": "lax"}
+COOKIE_SETTINGS = {"httponly": False, "samesite": "lax"}
 
 
 class LoginPayload(BaseModel):
