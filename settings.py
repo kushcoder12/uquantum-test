@@ -26,6 +26,12 @@ class Settings(BaseSettings):
     TRANSPILER_BACKEND_QUBITS: int = 27
     TRANSPILER_MODEL_PATH: Optional[str] = None
     TRANSPILER_LOG_DIR: str = "./logs"
+
+    # Cookie settings (session cookie behavior)
+    # Set COOKIE_SAMESITE to 'lax', 'strict', or 'none'.
+    # If you need cross-site cookies (front-end hosted on a different origin), use 'none' and set COOKIE_SECURE to True.
+    COOKIE_SAMESITE: str = "lax"
+    COOKIE_SECURE: bool = False  # Set this to True in production (requires HTTPS)
     
     class Config:
         env_file = ".env"
