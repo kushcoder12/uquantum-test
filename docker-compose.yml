@@ -1,4 +1,4 @@
-version: '3.8'
+version: "3.8"
 
 services:
   backend:
@@ -7,34 +7,12 @@ services:
       dockerfile: Dockerfile
     ports:
       - "8000:8000"
-    environment:
-      - INSTANTDB_KEY=${INSTANTDB_KEY}
-      - IBM_API_KEY=${IBM_API_KEY}
-      - REDIS_URL=${REDIS_URL:-redis://redis:6379}
-      - GROQ_API_KEY=${GROQ_API_KEY}
-      - FRONTEND_ORIGIN=${FRONTEND_ORIGIN:-http://localhost:3000}
-      - COOKIE_SAMESITE=${COOKIE_SAMESITE:-lax}
-      - COOKIE_SECURE=${COOKIE_SECURE:-false}
-    depends_on:
-      - redis
     env_file:
       - .env
     volumes:
       - .:/app
     networks:
       - quantum-network
-
-  redis:
-    image: redis:7-alpine
-    ports:
-      - "6379:6379"
-    networks:
-      - quantum-network
-    healthcheck:
-      test: ["CMD", "redis-cli", "ping"]
-      interval: 5s
-      timeout: 3s
-      retries: 5
 
 networks:
   quantum-network:
